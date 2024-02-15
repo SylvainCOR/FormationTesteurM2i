@@ -1,0 +1,403 @@
+{
+	"info": {
+		"_postman_id": "4877c9f8-f8f5-4807-880c-c6b8524b6b43",
+		"name": "API PetStore",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30424173"
+	},
+	"item": [
+		{
+			"name": "Create User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// pm.test(\"Response time is less than 400ms\", function () {\r",
+							"//     pm.expect(pm.response.responseTime).to.be.below(400);\r",
+							"// });\r",
+							"\r",
+							"pm.test(\"Code = 200\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.code).to.eql(200)\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Type = 'unknown'\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.type).to.eql(\"unknown\")\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Message OK\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.be.a(\"string\")\r",
+							"});\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"userId\", jsonData.message);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// rdmFirstName = pm.variables.replaceIn('{{$randomFirstName}}')\r",
+							"\r",
+							"pm.collectionVariables.set(\"firstName\", pm.variables.replaceIn('{{$randomFirstName}}'));\r",
+							"pm.collectionVariables.set(\"lastName\", pm.variables.replaceIn('{{$randomLastName}}'));\r",
+							"pm.collectionVariables.set(\"userName\", pm.variables.replaceIn('{{$randomUserName}}'));\r",
+							"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'));\r",
+							"pm.collectionVariables.set(\"password\", pm.variables.replaceIn('{{$randomPassword}}'));\r",
+							"pm.collectionVariables.set(\"phone\", pm.variables.replaceIn('{{$randomPhoneNumber}}'));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"{{userName}}\",\r\n  \"firstName\": \"{{firstName}}\",\r\n  \"lastName\": \"{{lastName}}\",\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"phone\": \"{{phone}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/user",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Customer Info",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// pm.test(\"Correct userId\", function () {\r",
+							"//     var jsonData = pm.response.json();\r",
+							"//     pm.expect(jsonData.id).to.eql(pm.collectionVariables.get(\"userId\"));\r",
+							"// });\r",
+							"\r",
+							"pm.test(\"Correct userName\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.username).to.eql(pm.collectionVariables.get(\"userName\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Correct firstName\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.firstName).to.eql(pm.collectionVariables.get(\"firstName\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Correct lastName\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.lastName).to.eql(pm.collectionVariables.get(\"lastName\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Correct email\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.email).to.eql(pm.collectionVariables.get(\"email\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Correct password\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.password).to.eql(pm.collectionVariables.get(\"password\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Correct phone\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(Number(jsonData.phone)).to.eql(Number(pm.collectionVariables.get(\"phone\")));\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/user/{{userName}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"user",
+						"{{userName}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login User",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/user/login?username={{userName}}&password={{password}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"user",
+						"login"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "{{userName}}"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout User",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/user/logout",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"user",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"firstName2\", pm.variables.replaceIn('{{$randomFirstName}}'));\r",
+							"pm.collectionVariables.set(\"lastName2\", pm.variables.replaceIn('{{$randomLastName}}'));\r",
+							"pm.collectionVariables.set(\"email2\", pm.variables.replaceIn('{{$randomEmail}}'));\r",
+							"pm.collectionVariables.set(\"password2\", pm.variables.replaceIn('{{$randomPassword}}'));\r",
+							"pm.collectionVariables.set(\"phone2\", pm.variables.replaceIn('{{$randomPhoneNumber}}'));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": \"{{userId}}\",\r\n  \"username\": \"{{userName}}\",\r\n  \"firstName\": \"{{firstName2}}\",\r\n  \"lastName\": \"{{lastName2}}\",\r\n  \"email\": \"{{email2}}\",\r\n  \"password\": \"{{password2}}\",\r\n  \"phone\": \"{{phone2}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/user/{{userName}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"user",
+						"{{userName}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Customer Info",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// pm.test(\"Correct userId\", function () {\r",
+							"//     var jsonData = pm.response.json();\r",
+							"//     pm.expect(jsonData.id).to.eql(pm.collectionVariables.get(\"userId\"));\r",
+							"// });\r",
+							"\r",
+							"pm.test(\"Correct userName\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.username).to.eql(pm.collectionVariables.get(\"userName\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Correct firstName\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.firstName).to.eql(pm.collectionVariables.get(\"firstName2\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Correct lastName\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.lastName).to.eql(pm.collectionVariables.get(\"lastName2\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Correct email\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.email).to.eql(pm.collectionVariables.get(\"email2\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Correct password\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.password).to.eql(pm.collectionVariables.get(\"password2\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Correct phone\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(Number(jsonData.phone)).to.eql(Number(pm.collectionVariables.get(\"phone2\")));\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/user/{{userName}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"user",
+						"{{userName}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/user/{{userName}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"user",
+						"{{userName}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "special-key",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"rdmFirstName = pm.variables.replaceIn('{{$randomFirstName}}')"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"Response time is less than 400ms\", function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(400);",
+					"});"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "firstName",
+			"value": ""
+		},
+		{
+			"key": "lastName",
+			"value": ""
+		},
+		{
+			"key": "userName",
+			"value": ""
+		},
+		{
+			"key": "email",
+			"value": ""
+		},
+		{
+			"key": "password",
+			"value": ""
+		},
+		{
+			"key": "phone",
+			"value": ""
+		},
+		{
+			"key": "userId",
+			"value": ""
+		},
+		{
+			"key": "firstName2",
+			"value": ""
+		},
+		{
+			"key": "lastName2",
+			"value": ""
+		},
+		{
+			"key": "email2",
+			"value": ""
+		},
+		{
+			"key": "password2",
+			"value": ""
+		},
+		{
+			"key": "phone2",
+			"value": ""
+		}
+	]
+}
